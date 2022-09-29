@@ -10,7 +10,7 @@
 
 const getRandom = (from, to) => {
   if (from > to) {
-    return new Error('InvalidOrderOfArgument');
+    throw new Error('InvalidOrderOfArgument');
   }
   const min = Math.ceil(from);
   const max = Math.floor(to);
@@ -28,6 +28,6 @@ const getRandom = (from, to) => {
 
 */
 
-const checkStringLenght = (string, maxLenght) => string.lenght <= maxLenght;
+const checkStringLength = (string, maxLength) => string.length <= maxLength;
 
-checkStringLenght('some test String with length: 32', getRandom(20, 40));
+checkStringLength('some test String with length: 32', getRandom(20, 40));
