@@ -31,10 +31,14 @@ const checkStringLength = (string, maxLength) => string.length <= maxLength;
 
 checkStringLength('some test String with length: 32', getRandom(20, 40));
 
+// Массив вида [1,2,3...23,24] для генерации Id
+const ID_ARRAY = Array.from({ length: 25 }, (_, i) => i+1);
 
-const ID_ARRAY = Array.from({ length: 25 }, (_, i) => i+1);     // Массив вида [1,2,3...23,24] для генерации Id
-const URL_ID_ARRAY = Array.from({ length: 25 }, (_, i) => i+1); // Массив вида [1,2,3...23,24] для генерации URL
-const DESCRIPTION_ARRAY = [ // Массив строк для генерации описания фотографии]
+// Массив вида [1,2,3...23,24] для генерации URL
+const URL_ID_ARRAY = Array.from({ length: 25 }, (_, i) => i+1);
+
+// Массив строк для генерации описания фотографии]
+const DESCRIPTION_ARRAY = [
   'Погулял',
   'Смотрите что получилось',
   '-- Тут должно быть смешное описание к фото --',
@@ -43,7 +47,9 @@ const DESCRIPTION_ARRAY = [ // Массив строк для генерации
   'Красота! Ляпота!!',
   'Это я сфотографировал!!!',
 ];
-const MESSAGE_ARRAY = [// Массив строк для генерации текста комментария]
+
+// Массив строк для генерации текста комментария]
+const MESSAGE_ARRAY = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра.В конце концов это просто непрофессионально.',
@@ -51,7 +57,9 @@ const MESSAGE_ARRAY = [// Массив строк для генерации те
   'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
-const NAME_ARRAY = [// Массив строк для генерации имени комментатора]
+
+// Массив строк для генерации имени комментатора]
+const NAME_ARRAY = [
   'Константин', 'Елена', 'Катя', 'Захар',
   'Света', 'Илья', 'Дарья', 'Алексей',
   'Елизавета', 'Владислав', 'Таина', 'Артём',
@@ -113,7 +121,7 @@ const getRandomNoReplyElementFrom = function(arrayOfElements) {
 */
 const createComment = function() {
   return {
-    id: getRandomNoReplyElementFrom(Array.from({ length: 500 }, (_, i) => i+1)),
+    id: getRandom(0,50000),
     avatar: `img/avatar-${getRandom(1,6)}.svg`,
     message: getRandomElementFrom(MESSAGE_ARRAY),
     name: getRandomElementFrom(NAME_ARRAY)
