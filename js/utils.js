@@ -58,4 +58,10 @@ const getRandomNoReplyElementFrom = function(arrayOfElements) {
   return element;
 };
 
-export {getRandom, checkStringLength, getRandomElementFrom, getRandomNoReplyElementFrom};
+
+/*
+Функция возвращяет true если событие (evt) было вызвано нажатием клавиши Escape и false в остальных случаях.
+*/
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export {getRandom, checkStringLength, getRandomElementFrom, getRandomNoReplyElementFrom, isEscapeKey};
