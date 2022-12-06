@@ -3,23 +3,33 @@ const commentList = bigPicture.querySelector('.social__comments');
 const newCommentTemplate = commentList.querySelector('.social__comment');
 const closeButton = bigPicture.querySelector('.big-picture__cancel');
 
-//добавим обработчики закрытия полноэкранной фотографии
-//при клике на клопку
-closeButton.addEventListener('click', () => {
-  bigPicture.classList.add('hidden');
-  document.body.classList.remove('modal-open');
-});
-//при наатии Esc
-document.addEventListener('keydown', (evt) => {
-  if (evt.key === 'Escape') {
-    bigPicture.classList.add('hidden');
-    document.body.classList.remove('modal-open');
-  }
-});
-
 
 //метод для смены информации о фотографии
-const changeBigPicture = function(newPicture){
+const openBigPicture = function(newPicture){
+
+  //добавим обработчики закрытия полноэкранной фотографии
+  //при клике на кнопку
+  closeButton.addEventListener(
+    'click',
+    () => {
+      bigPicture.classList.add('hidden');
+      document.body.classList.remove('modal-open');
+    },
+    {once: true}
+  );
+  //при нажатии Esc
+  document.addEventListener(
+    'keydown',
+    (evt) => {
+      if (evt.key === 'Escape') {
+        bigPicture.classList.add('hidden');
+        document.body.classList.remove('modal-open');
+      }
+    },
+    {once: true}
+  );
+
+
   bigPicture.querySelector('img').src = newPicture.url;
   bigPicture.querySelector('.likes-count').textContent = newPicture.likes;
   bigPicture.querySelector('.social__caption').textContent = newPicture.description;
@@ -48,4 +58,4 @@ const changeBigPicture = function(newPicture){
   bigPicture.classList.remove('hidden');
 };
 
-export {changeBigPicture};
+export {openBigPicture};
