@@ -107,7 +107,7 @@ const createPhotoDescription = function() {
     url:`photos/${getRandomNoReplyElementFrom(URL_ID_ARRAY)}.jpg`,
     description:getRandomElementFrom(DESCRIPTION_ARRAY),
     likes: getRandom(15, 200),
-    comments: createComments(getRandom(1,5))
+    comments: createComments(getRandom(1,15))
   };
 };
 
