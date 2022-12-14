@@ -1,4 +1,4 @@
-import {isEscapeKey} from './utils.js';
+import {isEscapeKey, getParamsForEffect} from './utils.js';
 
 //form
 const uploadForm = document.querySelector('.img-upload__form');
@@ -11,13 +11,18 @@ const editPictureForm = uploadForm.querySelector('.img-upload__overlay');
 const closeButton = editPictureForm.querySelector('#upload-cancel');
 const smallerScaleButton = editPictureForm.querySelector('.scale__control--smaller');
 const biggerScaleButton = editPictureForm.querySelector('.scale__control--bigger');
+const effectsButtons = editPictureForm.querySelectorAll('.effects__radio');
+//slider
+const sliderField = editPictureForm.querySelector('.img-upload__effect-level');
+const sliderElement = sliderField.querySelector('.effect-level__slider');
+const sliderValue = sliderField.querySelector('.effect-level__value');
 
 //fields
 const scaleInput = editPictureForm.querySelector('.scale__control--value');
 const imgPreview = editPictureForm.querySelector('.img-upload__preview');
 const description = uploadForm.querySelector('.text__description');
 
-let pristine;
+let  effect, pristine;
 
 function onPopupEscKeydown(evt){
   if (isEscapeKey(evt)) {
@@ -59,6 +64,20 @@ function onBiggerButtonClick(){
   }
 }
 
+function onEffectChange(evt){
+  imgPreview.classList.remove(`effects__preview--${effect}`);
+  effect = evt.target.value;
+  imgPreview.classList.add(`effects__preview--${effect}`);
+  if (effect !== 'none') {
+    sliderField.classList.remove('hidden');
+    changeSliderOptions();
+  } else {
+    sliderField.classList.add('hidden');
+    imgPreview.style.filter = '';
+  }
+
+}
+
 function addListeners(){
   //добавим обработчики закрытия загружаемого изображения
   //при клике на кнопку
@@ -72,6 +91,9 @@ function addListeners(){
   //обработчики редактора изображения
   smallerScaleButton.addEventListener('click', onSmallerButtonClick);
   biggerScaleButton.addEventListener('click', onBiggerButtonClick);
+  for (const effectButton of effectsButtons){
+    effectButton.addEventListener('change', onEffectChange);
+  }
 
   //обработчик отправки формы
   uploadForm.addEventListener('submit', onFormSubmit);
@@ -98,7 +120,11 @@ function openPictureRedactor(){
   //default values
   scaleInput.value = '100%';
   imgPreview.style.transform = 'scale(1)';
+  effect = 'none';
+  sliderField.classList.add('hidden');
 
+  //add slider
+  createNoUiSlider();
   //add validator
   createPristineValidator();
 
@@ -118,6 +144,52 @@ function closePictureRedactor(){
   editPictureForm.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
+}
+
+//slider
+
+function createNoUiSlider(){
+  noUiSlider.create(sliderElement, {
+    range: {
+      min: 0,
+      max: 1,
+    },
+    start: 1,
+    step: 0.1,
+    connect: 'lower',
+    format: {
+      to: function (value) {
+        return value.toFixed(1);
+      },
+      from: function (value) {
+        return parseFloat(value);
+      },
+    },
+  });
+
+  sliderElement.noUiSlider.on('update', () => {
+    const value =  sliderElement.noUiSlider.get();
+    sliderValue.value = value;
+
+    const [, , , filterFuncName, sym] = getParamsForEffect(effect);
+    imgPreview.style.filter = `${filterFuncName}(${value + sym})`;
+
+  });
+}
+
+function changeSliderOptions(){
+  const [min, max, step, filterFuncName, sym] = getParamsForEffect(effect);
+
+  sliderElement.noUiSlider.updateOptions({
+    range: {
+      min: min,
+      max: max
+    },
+    start: max,
+    step: step
+  });
+
+  imgPreview.style.filter = `${filterFuncName}(${max + sym})`;
 }
 
 //valifation
