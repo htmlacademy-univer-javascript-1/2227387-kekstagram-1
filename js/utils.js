@@ -64,4 +64,29 @@ const getRandomNoReplyElementFrom = function(arrayOfElements) {
 */
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandom, checkStringLength, getRandomElementFrom, getRandomNoReplyElementFrom, isEscapeKey};
+/*
+Функция возвращяет параметры для slider'а в зависимости от имени эффекта.
+*/
+function getParamsForEffect(effect){
+  switch(effect) {
+    case 'chrome':
+      return [0, 1, 0.1, 'grayscale', ''];
+
+    case 'sepia':
+      return [0, 1, 0.1, 'sepia', ''];
+
+    case 'marvin':
+      return [0, 100, 1, 'invert', '%'];
+
+    case 'phobos':
+      return [0, 3, 0.1, 'blur', 'px'];
+
+    case 'heat':
+      return [1, 3, 0.1, 'brightness', ''];
+
+    default:
+      return [0, 1, 0.1, '', ''];
+  }
+}
+
+export {getRandom, checkStringLength, getRandomElementFrom, getRandomNoReplyElementFrom, isEscapeKey, getParamsForEffect};
