@@ -1,4 +1,5 @@
 import {isEscapeKey, getParamsForEffect} from './utils.js';
+import {sendData} from './api.js';
 
 //form
 const uploadForm = document.querySelector('.img-upload__form');
@@ -12,6 +13,7 @@ const closeButton = editPictureForm.querySelector('#upload-cancel');
 const smallerScaleButton = editPictureForm.querySelector('.scale__control--smaller');
 const biggerScaleButton = editPictureForm.querySelector('.scale__control--bigger');
 const effectsButtons = editPictureForm.querySelectorAll('.effects__radio');
+const submitButton = editPictureForm.querySelector('.img-upload__submit');
 //slider
 const sliderField = editPictureForm.querySelector('.img-upload__effect-level');
 const sliderElement = sliderField.querySelector('.effect-level__slider');
@@ -21,8 +23,19 @@ const sliderValue = sliderField.querySelector('.effect-level__value');
 const scaleInput = editPictureForm.querySelector('.scale__control--value');
 const imgPreview = editPictureForm.querySelector('.img-upload__preview');
 const description = uploadForm.querySelector('.text__description');
+const successMessage = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
+const errorMessage = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
 
-let  effect, pristine;
+let  effect, pristine, newMessage, messageButton;
+
+function blockSubmitButton(){
+  submitButton.disabled = true;
+  submitButton.textContent = 'Публикуем...';
+}
+function unblockSubmitButton(){
+  submitButton.disabled = false;
+  submitButton.textContent = 'Опубликовать';
+}
 
 function onPopupEscKeydown(evt){
   if (isEscapeKey(evt)) {
@@ -37,9 +50,65 @@ function onPopupEscKeydownPrevent(evt){
   }
 }
 
+function closeMessage(){
+  document.body.removeChild(newMessage);
+  document.removeEventListener( 'keydown', closeMsgEscKeydown);
+  document.removeEventListener( 'click', closeMsgWindowClick);
+  document.addEventListener( 'keydown', onPopupEscKeydown);
+  if (newMessage.classList.contains('error')) {
+    editPictureForm.classList.remove('hidden');
+  }
+}
+
+function closeMsgEscKeydown(evt){
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    closeMessage(newMessage);
+  }
+}
+
+function closeMsgWindowClick(evt){
+  if(evt.target !== newMessage.querySelector('div')) {
+    closeMessage(newMessage);
+  }
+}
+
+function showMessage(isSuccess){
+  if (isSuccess) {
+    newMessage = successMessage;
+    messageButton = newMessage.querySelector('.success__button');
+  } else {
+    newMessage = errorMessage;
+    messageButton = newMessage.querySelector('.error__button');
+  }
+  messageButton.addEventListener( 'click', closeMessage);
+  document.removeEventListener( 'keydown', onPopupEscKeydown);
+  document.addEventListener( 'keydown', closeMsgEscKeydown);
+  document.addEventListener( 'click', closeMsgWindowClick);
+
+  document.body.append(newMessage);
+}
+
 function onFormSubmit(evt){
   evt.preventDefault();
-  pristine.validate();
+  const isValid = pristine.validate();
+
+  if (isValid) {
+    blockSubmitButton();
+    sendData(
+      () => {
+        closePictureRedactor();
+        showMessage(true);
+        unblockSubmitButton();
+      },
+      () => {
+        editPictureForm.classList.add('hidden');
+        showMessage(false);
+        unblockSubmitButton();
+      },
+      new FormData(evt.target),
+    );
+  }
 }
 
 function onSmallerButtonClick(){
@@ -120,7 +189,7 @@ function openPictureRedactor(){
   //default values
   scaleInput.value = '100%';
   imgPreview.style.transform = 'scale(1)';
-  effect = 'none';
+  effect = '';
   sliderField.classList.add('hidden');
 
   //add slider
@@ -134,12 +203,15 @@ function openPictureRedactor(){
 
 function closePictureRedactor(){
   inputFile.value = '';
-  uploadForm.querySelector('.scale__control--value').value = '100%';
-  uploadForm.querySelector('.effect-level__value').value = 'none';
+  scaleInput.value = '100%';
+  sliderValue.value = '';
+  imgPreview.style.filter = '';
+  imgPreview.classList.remove(`effects__preview--${effect}`);
   uploadForm.querySelector('.text__hashtags').value = '';
   description.value = '';
 
   removeListeners();
+  sliderElement.noUiSlider.destroy();
 
   editPictureForm.classList.add('hidden');
   document.body.classList.remove('modal-open');
@@ -192,7 +264,7 @@ function changeSliderOptions(){
   imgPreview.style.filter = `${filterFuncName}(${max + sym})`;
 }
 
-//valifation
+//validation
 
 function isValidHashtag(tag){
   const reg = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}/;
