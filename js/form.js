@@ -23,6 +23,7 @@ const sliderValue = sliderField.querySelector('.effect-level__value');
 const scaleInput = editPictureForm.querySelector('.scale__control--value');
 const imgPreview = editPictureForm.querySelector('.img-upload__preview');
 const description = uploadForm.querySelector('.text__description');
+const hashTagsField = uploadForm.querySelector('.text__hashtags');
 const successMessage = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
 const errorMessage = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
 
@@ -167,8 +168,9 @@ function addListeners(){
   //при нажатии Esc
   document.addEventListener( 'keydown', onPopupEscKeydown);
 
-  //предотвращение закрытия если в фокусе поле для набора комментария
+  //предотвращение закрытия если в фокусе поле для набора комментария и хэштега.
   description.addEventListener( 'keydown', onPopupEscKeydownPrevent);
+  hashTagsField.addEventListener( 'keydown', onPopupEscKeydownPrevent);
 
   //обработчики редактора изображения
   smallerScaleButton.addEventListener('click', onSmallerButtonClick);
@@ -185,6 +187,7 @@ function removeListeners(){
   document.removeEventListener( 'keydown', onPopupEscKeydown);
 
   description.removeEventListener( 'keydown', onPopupEscKeydownPrevent);
+  hashTagsField.removeEventListener( 'keydown', onPopupEscKeydownPrevent);
 
   smallerScaleButton.removeEventListener('click', onSmallerButtonClick);
   biggerScaleButton.removeEventListener('click', onBiggerButtonClick);
@@ -222,7 +225,7 @@ function closePictureRedactor(){
   sliderValue.value = '';
   imgPreview.style.filter = '';
   imgPreview.classList.remove(`effects__preview--${effect}`);
-  uploadForm.querySelector('.text__hashtags').value = '';
+  hashTagsField.value = '';
   description.value = '';
 
   removeListeners();
@@ -283,7 +286,7 @@ function changeSliderOptions(){
 
 function isValidHashtag(tag){
   const reg = /^#[A-Za-zА-Яа-яЁё0-9]{1,19}/;
-  return reg.test(tag);
+  return reg.test(tag) && (tag.length <= 20);
 }
 
 function validateHashtags(value){
@@ -304,7 +307,7 @@ function createPristineValidator() {
   }, false);
 
   pristine.addValidator(
-    uploadForm.querySelector('.text__hashtags'),
+    hashTagsField,
     validateHashtags,
     'хэштеги должны быть уникальны, Хэштегов должно быть не больше 5, Хэштеги могут сордержать только буквы и цифры'
   );

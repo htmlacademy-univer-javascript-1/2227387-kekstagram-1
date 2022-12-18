@@ -7,6 +7,7 @@ const closeButton = bigPicture.querySelector('.big-picture__cancel');
 const loadMoreCommentsButton = bigPicture.querySelector('.social__comments-loader');
 const commentsCount = bigPicture.querySelector('.social__comment-count');
 const allcommentsValue = bigPicture.querySelector('.comments-count');
+const commentLoadButton = bigPicture.querySelector('.comments-loader');
 
 let comments;
 let commentsCountValue;
@@ -43,6 +44,12 @@ function showFiveComments(){
   commentsCount.textContent = `${commentsCountValue} из `;
   commentsCount.append(allcommentsValue);
   commentsCount.append(' комментариев');
+
+  if (comments.length){
+    commentLoadButton.classList.remove('hidden');
+  } else {
+    commentLoadButton.classList.add('hidden');
+  }
 }
 
 function createComments(newPicture){
