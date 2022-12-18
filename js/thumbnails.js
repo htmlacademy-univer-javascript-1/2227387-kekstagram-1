@@ -1,7 +1,7 @@
 import {getRandomNoReplyElementFrom} from './utils.js';
 
 //Находим нужный контейнер и шаблон.
-const picturesContainer = document.querySelector('.pictures');
+const picturesContainerElement = document.querySelector('.pictures');
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
 //Фильтры
@@ -14,7 +14,7 @@ let filter = 'default';
 вешаем на него обработчик по клику (для реализации открытия фотографии на полный экран),
 в обработчик передаётся функция которая должна выполняться при клике на фотографию
 */
-const drawThumbnails = function(photos, onPhotoClick, filterCallBack){
+const drawThumbnails = (photos, onPhotoClick, filterCallBack) => {
   const photosFragment = document.createDocumentFragment();
   let pictures = photos.slice();
 
@@ -36,14 +36,14 @@ const drawThumbnails = function(photos, onPhotoClick, filterCallBack){
   });
 
   //Удалим все старые миниаиюры перед добавлением новых.
-  picturesContainer.querySelectorAll('.picture').forEach((oldPic) => oldPic.remove());
+  picturesContainerElement.querySelectorAll('.picture').forEach((oldPic) => oldPic.remove());
 
-  picturesContainer.append(photosFragment);
+  picturesContainerElement.append(photosFragment);
 
   filterElement.classList.remove('img-filters--inactive');
 };
 
-const setFilterClick = function(filterName, cb){
+const setFilterClick = (filterName, cb) => {
   const filterButton = filterElement.querySelector(`#filter-${filterName}`);
   filterButton.addEventListener('click', () => {
     if(filter !== filterName) {
@@ -57,11 +57,7 @@ const setFilterClick = function(filterName, cb){
   });
 };
 
-const randomFilter = function(array){
-  return Array.from({ length: 10 }, () => getRandomNoReplyElementFrom(array));
-};
-const discussedFilter = function(array){
-  return array.sort((picsA, piscB) => piscB.comments.length - picsA.comments.length);
-};
+const randomFilter = (array) => Array.from({ length: 10 }, () => getRandomNoReplyElementFrom(array));
+const discussedFilter = (array) => array.sort((picsA, piscB) => piscB.comments.length - picsA.comments.length);
 
 export {drawThumbnails, setFilterClick, randomFilter, discussedFilter};

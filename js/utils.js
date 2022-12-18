@@ -19,20 +19,6 @@ const getRandom = (from, to) => {
 };
 
 /*
-Функция для проверки максимальной длины строки.
-
-Пример использования функции:
-имя_функции(проверяемая_строка, максимальная_длина);
-  Результат:
-    true, если строка проходит по длине,
-    false — если не проходит
-
-*/
-
-const checkStringLength = (string, maxLength) => string.length <= maxLength;
-
-
-/*
 функция возвращяющая случайный элемент из массива arrayOfElements
 
 Пример использования функции:
@@ -132,4 +118,4 @@ const debounce = (callback, timeoutDelay = 500) => {
   };
 };
 
-export {getRandom, checkStringLength, getRandomElementFrom, getRandomNoReplyElementFrom, isEscapeKey, getParamsForEffect, showAlert, debounce};
+export {getRandom, getRandomElementFrom, getRandomNoReplyElementFrom, isEscapeKey, getParamsForEffect, showAlert, debounce};
