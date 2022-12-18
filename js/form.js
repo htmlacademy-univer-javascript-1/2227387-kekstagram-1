@@ -26,6 +26,8 @@ const description = uploadForm.querySelector('.text__description');
 const successMessage = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
 const errorMessage = document.querySelector('#error').content.querySelector('.error').cloneNode(true);
 
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
 let  effect, pristine, newMessage, messageButton;
 
 function blockSubmitButton(){
@@ -147,6 +149,17 @@ function onEffectChange(evt){
 
 }
 
+function updatePreview(){
+  const file = inputFile.files[0];
+  const fileName = file.name.toLowerCase();
+
+  const matches = FILE_TYPES.some((it) => fileName.endsWith(it));
+
+  if (matches) {
+    imgPreview.querySelector('img').src = URL.createObjectURL(file);
+  }
+}
+
 function addListeners(){
   //добавим обработчики закрытия загружаемого изображения
   //при клике на кнопку
@@ -181,8 +194,10 @@ function removeListeners(){
 
 }
 
-
 function openPictureRedactor(){
+
+  updatePreview();
+
   editPictureForm.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
