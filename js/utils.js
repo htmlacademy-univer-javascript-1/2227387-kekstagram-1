@@ -91,6 +91,9 @@ const getParamsForEffect = (effect) =>{
   }
 };
 
+/*
+Функция для показа сообщения об ошибке. Взята из демонстрации.
+*/
 const showAlert = (message) => {
   const alertContainer = document.createElement('div');
   alertContainer.style.zIndex = '100';
@@ -112,4 +115,21 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export {getRandom, checkStringLength, getRandomElementFrom, getRandomNoReplyElementFrom, isEscapeKey, getParamsForEffect, showAlert};
+/*
+Функция для устранения дребезга: взята из задания 12.10.
+*/
+
+const debounce = (callback, timeoutDelay = 500) => {
+
+  let timeoutId;
+
+  return (...rest) => {
+
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+
+  };
+};
+
+export {getRandom, checkStringLength, getRandomElementFrom, getRandomNoReplyElementFrom, isEscapeKey, getParamsForEffect, showAlert, debounce};
