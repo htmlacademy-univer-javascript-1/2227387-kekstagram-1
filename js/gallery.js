@@ -2,7 +2,6 @@ import {drawThumbnails, setFilterClick, randomFilter, discussedFilter} from './t
 import {openBigPicture} from './full-screen-image.js';
 import {getData} from './api.js';
 import {debounce} from './utils.js';
-//const pictures = document.querySelectorAll('.picture');
 
 const RERENDER_DELAY = 500;
 
